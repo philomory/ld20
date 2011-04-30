@@ -1,6 +1,6 @@
 The process of dungeon layout goes like this: ENTRY ROOM, PRE-ITEM, ITEM, POST-ITEM,  MAGIC-KEY, GOAL,  BONUS.
 
-We begin with a single room, the entry room. It has coordinates 0,0. The stage is 0, it is pre-item, and it's contents is special (type: ENTRY), which more or less means empty of interesting features (no enemies or hidden doors or items, still can have some decorative terrain features.).
+We begin with a single room, the entry room. It has coordinates 0,0. The stage is 0, it is pre-item, and its contents are special (type: ENTRY), which more or less means empty of interesting features (no enemies or hidden doors or items, still can have some decorative terrain features.).
 
 We move on to the PRE-ITEM step proper now. It will have a random number of stages, probably 2-4. Each stage will have a random number of rooms. Ideally, the more stages, the fewer rooms each stage will have so that on average you end up with around the same number of rooms for the PRE-ITEM step. But anyway, for now, say, 2-4 rooms per stage, as well. So.
 
