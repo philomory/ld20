@@ -1,5 +1,10 @@
 module LD20
   class DungeonLayout
+    attr_reader :dungeon_map
+    def initialize
+      gen_layout
+    end
+    
     def gen_layout
       setup
       entry
