@@ -6,5 +6,8 @@ module LD20
   TileHeight = 32
   
   FullMapTilesWide = 20
-  FullMapTilesHigh = 15
+  FullMapTilesHigh = 14
+  MapYOffset = 1 * TileHeight
+  
+  WallColor = 0xFF283732
 end

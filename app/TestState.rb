@@ -16,7 +16,7 @@ module LD20
         y_pos = y * TileHeight + 32
         i.draw(x_pos,y_pos,0)
       end
-      Image["border.png"].draw(0,32,100)
+      Image["doors.png"].draw(0,32,100,1,1,0xFF283732)
     end
   end
 end

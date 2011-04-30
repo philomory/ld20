@@ -11,7 +11,7 @@ module LD20
       super(WindowWidth,WindowHeight)
       self.input = {escape: :exit}
       @dungeon = DungeonLayout.new
-      push_game_state TestState
+      push_game_state RoomState.new(room_x:0, room_y:0)
       
     end
   end
