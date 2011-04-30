@@ -1,6 +1,6 @@
-The process of dungeon layout goes like this: ENTRY ROOM, PRE-ITEM, ITEM, POST-ITEM, GOAL, BONUS.
+The process of dungeon layout goes like this: ENTRY ROOM, PRE-ITEM, ITEM, POST-ITEM,  MAGIC-KEY, GOAL,  BONUS.
 
-We begin with a single room, the entry room. It has coordinates 0,0. The stage is 0, it is pre-item, and it's contents is special, which more or less means empty of interesting features (no enemies or hidden doors or items, still can have some decorative terrain features.).
+We begin with a single room, the entry room. It has coordinates 0,0. The stage is 0, it is pre-item, and it's contents is special (type: ENTRY), which more or less means empty of interesting features (no enemies or hidden doors or items, still can have some decorative terrain features.).
 
 We move on to the PRE-ITEM step proper now. It will have a random number of stages, probably 2-4. Each stage will have a random number of rooms. Ideally, the more stages, the fewer rooms each stage will have so that on average you end up with around the same number of rooms for the PRE-ITEM step. But anyway, for now, say, 2-4 rooms per stage, as well. So.
 
@@ -14,11 +14,28 @@ d) mark the two rooms as connected to each other.
 Loop through that process as many times as there are rooms in the stage. Afterwards, pick the obstacle type: key-lock or switch-lock
 
 if key-lock:
-  Pick one room in this stage that is not completely surrounded to have the locked door. Pick another room from this stage (any room, surrounded or not) to have the a key. Mark the key room as the key room, pick an available direction from the door room and create a new room in that direction. Mark that the two rooms are connected to each other by a locked door.
+  Pick one room in this stage that is not completely surrounded to have the locked door. Pick another room from this stage [possibly could be any stage?](any room, surrounded or not) to have the a key. Mark the key room as the key room (Type: KEY), pick an available direction from the door room and create a new room in that direction. Mark that the two rooms are connected to each other by a locked door.
 
-if switch-lock: Pick one room [advanced: or more] in *any* stage, that is not completely surrounded, to have the switch-closed door. Pick some room in *this* stage to have the switch. Mark the switch room, pick a direction off of the door room and create a new room in that direction. Mark that the rooms are connected to each other by a switch-locked door. Unlike for the keys, the switch and door need identifier numbers so that the door can only be opened by the correct switch.
+if switch-lock: Pick one room [advanced: or more] in *any* stage, that is not completely surrounded, to have the switch-closed door. Pick some room in *this* stage to have the switch. Mark the switch room (Type: SWITCH), pick a direction off of the door room and create a new room in that direction. Mark that the rooms are connected to each other by a switch-locked door. Unlike for the keys, the switch and door need identifier numbers so that the door can only be opened by the correct switch.
 
 In both cases, the new room placed past the obstacle is the first member of the next stage, and should be denoted appropriately.
 
 Now, start the loop over with the next stage.
 
+Once all the stages are done in PRE-ITEM, it's time for ITEM. ITEM not only has only one stage, it has only one room. (It should be noted that if we go the advanced route and allow switches to unlock more than one door at once, then we may need to special case the last stage of PRE-ITEM to ensure that there is only one exit for that particular stage. Or not.)
+
+The item room will have the treasure in it. Layout of the interior of the room is likewise special, but will be described elsewhere.
+
+Now that the player has the ITEM, it's time to move to POST-ITEM. POST-ITEM is much like ITEM, however, there is are two new obstacle types: item-blocked-key-lock and item-blocked-switch-lock. The item-lock obstacle type should dominate - but not entirely replace - key-lock and switch-lock for the POST-ITEM step. 
+
+if item-blocked-key-lock:
+	Pick any room in the dungeon that does not already have a content type, and mark it item-blocked key. This can be from any stage. Now, pick a room in the *current* stage and create a new room off of it in the same manner as is done for key-locked rooms.
+	
+if item-blocked-switch-lock:
+   As switch-lock, but the switch room is marked item-blocked-switch.
+	
+NOTE: It is possible, when it comes time to place the door for key-locked or item-locked stages, that there will be no rooms in the current stage that have open edges (they may be surrounded by rooms from earlier stages). In this case, use a switch-lock in place of a key-lock, or an item-blocked-switch-lock in place of an item-blocked-key-lock.
+
+ONCE the POST-ITEM step is complete, it is time to move to the MAGIC-KEY step. The MAGIC-KEY step works a little differently. First of all, it consists of only one stage. Second, there are fewer rooms. First, build a stage off of the starter room for the stage, nearly normally, except, it has only 1-2 rooms instead of the usual number, and you do not select a normal obstacle type. Instead, once you have placed the rooms in this stage, take the *last* room placed, and mark it type: MAGIC-KEY.
+
+Now it is time for the GOAL step. Pick any room in the entire dungeon that is not entirely surrounded, and is not from the MAGIC-KEY step. Pick an available edge, and create a new room off of that edge. Connect the two rooms with a MAGIC DOOR. Mark the new room 'GOAL'.
