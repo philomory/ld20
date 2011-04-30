@@ -53,6 +53,15 @@ def add_room(room)
   @dungeon_map[coords] = room
   @all_rooms << room
   @latest_room = room
+  
+  [:n,:s,:e,:w].each do |dir|
+    check_coords = coords_in_direction(room,dir)
+    check_room = @dungeon_map[check_coords]
+    if check_room
+      room[:available_edges].delete(dir)
+      check_room[:available_edges].delete(opposite_direction(dir))
+    end
+  end
 end
 
 def step_room(*args)
@@ -301,43 +310,62 @@ gen_layout
 min_x = @dungeon_map.keys.map {|k| k[0]}.min
 min_y = @dungeon_map.keys.map {|k| k[1]}.min
 
-@new_dungeon_map = {}
-@dungeon_map.each_pair do |coords,room|
-  old_x, old_y = *coords
-  new_x = old_x - min_x
-  new_y = old_y - min_y
-  new_coords = [new_x,new_y]
-  @new_dungeon_map[new_coords] = room
-  room[:x] = new_x
-  room[:y] = new_y
-  room[:connected_rooms].each_pair do |dir,info|
-    old_con_coords = info[:room]
-    old_con_x, old_con_y = *old_con_coords
-    new_con_x = old_con_x - min_x
-    new_con_y = old_con_y - min_y
-    new_con_coords = [new_con_x,new_con_y]
-    info[:room] = new_con_coords
-  end
-end
+#@new_dungeon_map = {}
+#@dungeon_map.each_pair do |coords,room|
+#  old_x, old_y = *coords
+#  new_x = old_x - min_x
+#  new_y = old_y - min_y
+#  new_coords = [new_x,new_y]
+#  @new_dungeon_map[new_coords] = room
+#  room[:x] = new_x
+#  room[:y] = new_y
+#  room[:connected_rooms].each_pair do |dir,info|
+#    old_con_coords = info[:room]
+#    old_con_x, old_con_y = *old_con_coords
+#    new_con_x = old_con_x - min_x
+#    new_con_y = old_con_y - min_y
+#    new_con_coords = [new_con_x,new_con_y]
+#    info[:room] = new_con_coords
+#  end
+#end
+#
+#max_x = @new_dungeon_map.keys.map {|k| k[0]}.max # unlimited!
+#max_y = @new_dungeon_map.keys.map {|k| k[1]}.max
+#
+#x_size = max_x + 1
+#y_size = max_y + 1
+#
+##pp @new_dungeon_map
+##puts @stages.size
+#
+#size = 0
+#y_size.times do |y|
+#  x_size.times do |x|
+#    room = @new_dungeon_map[[x,y]]
+#    char = room ? room[:stage].to_s(36) : '.'
+#    size += 1 if room
+#    print char
+#  end
+#  puts
+#end
+#puts
 
-max_x = @new_dungeon_map.keys.map {|k| k[0]}.max # unlimited!
-max_y = @new_dungeon_map.keys.map {|k| k[1]}.max
+max_x = @dungeon_map.keys.map {|k| k[0]}.max # unlimited!
+max_y = @dungeon_map.keys.map {|k| k[1]}.max
 
-x_size = max_x + 1
-y_size = max_y + 1
-
-pp @new_dungeon_map
-puts @new_dungeon_map.size
-puts @stages.size
-
-y_size.times do |y|
-  x_size.times do |x|
-    room = @new_dungeon_map[[x,y]]
-    char = room ? room[:stage].to_s(36) : ' '
+(min_y..max_y).each do |y|
+  (min_x..max_x).each do |x|
+    room = @dungeon_map[[x,y]]
+    char = room ? room[:stage].to_s(36) : '.'
     print char
   end
   puts
 end
 puts
-    
+puts "#{min_x},#{min_y}"
+
+
+#p @stages
+puts
+puts @dungeon_map.size
 
