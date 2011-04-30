@@ -1,0 +1,24 @@
+The process of dungeon layout goes like this: ENTRY ROOM, PRE-ITEM, ITEM, POST-ITEM, GOAL, BONUS.
+
+We begin with a single room, the entry room. It has coordinates 0,0. The stage is 0, it is pre-item, and it's contents is special, which more or less means empty of interesting features (no enemies or hidden doors or items, still can have some decorative terrain features.).
+
+We move on to the PRE-ITEM step proper now. It will have a random number of stages, probably 2-4. Each stage will have a random number of rooms. Ideally, the more stages, the fewer rooms each stage will have so that on average you end up with around the same number of rooms for the PRE-ITEM step. But anyway, for now, say, 2-4 rooms per stage, as well. So.
+
+Loop through the stages. We will be adding rooms to the map:
+
+a) Pick a random room in the current stage that is not already surrounded by other rooms. (The very first time, this will have to be the entry room).
+b) Pick a random direction from that room that is not already connected.
+c) create a new room in that direction. 
+d) mark the two rooms as connected to each other.
+
+Loop through that process as many times as there are rooms in the stage. Afterwards, pick the obstacle type: key-lock or switch-lock
+
+if key-lock:
+  Pick one room in this stage that is not completely surrounded to have the locked door. Pick another room from this stage (any room, surrounded or not) to have the a key. Mark the key room as the key room, pick an available direction from the door room and create a new room in that direction. Mark that the two rooms are connected to each other by a locked door.
+
+if switch-lock: Pick one room [advanced: or more] in *any* stage, that is not completely surrounded, to have the switch-closed door. Pick some room in *this* stage to have the switch. Mark the switch room, pick a direction off of the door room and create a new room in that direction. Mark that the rooms are connected to each other by a switch-locked door. Unlike for the keys, the switch and door need identifier numbers so that the door can only be opened by the correct switch.
+
+In both cases, the new room placed past the obstacle is the first member of the next stage, and should be denoted appropriately.
+
+Now, start the loop over with the next stage.
+
