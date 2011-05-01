@@ -37,7 +37,7 @@ module LD20
         y: 0,
         step: :entry,
         type: :entry,
-        available_edges: [:n,:s,:e,:w],
+        available_edges: [:north,:south,:east,:west],
         connected_rooms: {}
       }
 
@@ -61,7 +61,7 @@ module LD20
       @all_rooms << room
       @latest_room = room
 
-      [:n,:s,:e,:w].each do |dir|
+      [:north,:south,:east,:west].each do |dir|
         check_coords = coords_in_direction(room,dir)
         check_room = @dungeon_map[check_coords]
         if check_room
@@ -120,7 +120,7 @@ module LD20
         x: x,
         y: y,
         step: @current_step,
-        available_edges: [:n,:s,:e,:w],
+        available_edges: [:north,:south,:east,:west],
         connected_rooms: {}
       }
       add_room(room)
@@ -148,7 +148,7 @@ module LD20
         x: x,
         y: y,
         step: :item,
-        available_edges: [:n,:s,:e,:w],
+        available_edges: [:north,:south,:east,:west],
         connected_rooms: {}
       }
       add_room(room)
@@ -289,10 +289,10 @@ module LD20
     def coords_in_direction(room,dir)
       x, y = room[:x], room[:y]
       delta = case dir
-      when :n then [ 0,-1]
-      when :s then [ 0, 1]
-      when :e then [ 1, 0]
-      when :w then [-1, 0]
+      when :north then [ 0,-1]
+      when :south then [ 0, 1]
+      when :east then [ 1, 0]
+      when :west then [-1, 0]
       end
       x += delta[0]
       y += delta[1]
@@ -301,10 +301,10 @@ module LD20
 
     def opposite_direction(dir)
       case dir
-      when :n then :s
-      when :s then :n
-      when :e then :w
-      when :w then :e
+      when :north then :south
+      when :south then :north
+      when :east then :west
+      when :west then :east
       else
         raise "Ballyoo! That's not a direction!"
       end

@@ -6,11 +6,12 @@ Song.autoload_dirs  << "#{ROOT}/media/music"
 
 module LD20
   class MainWindow < Chingu::Window
-    attr_reader :dungeon
+    attr_reader :dungeon, :basic_player
     def initialize
       super(WindowWidth,WindowHeight)
       self.input = {escape: :exit}
       @dungeon = DungeonLayout.new
+      @basic_player = BasicPlayer.new
       push_game_state RoomState.new(room_x:0, room_y:0)
       
     end

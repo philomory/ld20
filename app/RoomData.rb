@@ -1,12 +1,29 @@
 module LD20
   module RoomData
     def load_room_data
-      @room = $window.dungeon.dungeon_map[[@room_x,@room_y]]
-      puts @room
+      @room_data = $window.dungeon.dungeon_map[[@room_x,@room_y]]
+      #puts @room_data
       @terrain = Grid.new(FullMapTilesWide, FullMapTilesHigh)
       fill_floor
       place_walls
       handle_doors
+      layout
+    end
+    
+    def layout
+      p @room_data[:type]
+      @layout = case @room_data[:type]
+      when :entry then EntryRoom.new(self)
+      when :normal then NormalRoom.new(self)
+      when :switch then SwitchRoom.new(self)
+      when :key then KeyRoom.new(self)
+      when :magic_key then MagicKeyRoom.new(self)
+      when :item then TreasureRoom.new(self)
+      when :goal then GoalRoom.new(self)
+      else
+        warn "unrecognized room type: #{@room_data[:type]}"
+        NormalRoom.new(self)
+      end
     end
     
     def fill_floor
@@ -22,8 +39,8 @@ module LD20
     end
     
     def handle_doors
-      [:n,:s,:e,:w].each do |dir|
-        if (door = @room[:connected_rooms][dir])
+      [:north,:south,:east,:west].each do |dir|
+        if (door = @room_data[:connected_rooms][dir])
           door_type = door[:type]
           remove_walls_in_direction(dir)
           switch_id = door[:switch_id]
@@ -36,10 +53,10 @@ module LD20
     
     def remove_walls_in_direction(dir)
       coords = case dir
-      when :n then [[9,10],[0,1]]
-      when :s then [[9,10],[12,13]]
-      when :e then [[18,19],[6,7]]
-      when :w then [[0,1],[6,7]]
+      when :north then [[9,10],[0,1]]
+      when :south then [[9,10],[12,13]]
+      when :east then [[18,19],[6,7]]
+      when :west then [[0,1],[6,7]]
       end
       x_coords,y_coords = *coords
       y_coords.each do |y|
@@ -51,10 +68,10 @@ module LD20
     
     def add_door_cover(dir)
       options = case dir
-      when :n then {x: WindowWidth/2, y: TileHeight + MapYOffset, angle: 0}
-      when :s then {x: WindowWidth/2, y: WindowHeight - TileHeight, angle: 180}
-      when :w then {x: TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 270}
-      when :e then {x: WindowWidth - TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 90}
+      when :north then {x: WindowWidth/2, y: TileHeight + MapYOffset, angle: 0}
+      when :south then {x: WindowWidth/2, y: WindowHeight - TileHeight, angle: 180}
+      when :west then {x: TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 270}
+      when :east then {x: WindowWidth - TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 90}
       else; raise "That's not a direction! #{dir.inspect}"
       end
       options.merge!(image: Image["door_cover.png"], zorder: 501, update: false, color: WallColor)
@@ -70,14 +87,19 @@ module LD20
       end
       return unless door_klass
       options = case dir
-      when :n then {x: WindowWidth/2, y: TileHeight + MapYOffset, angle: 0}
-      when :s then {x: WindowWidth/2, y: WindowHeight - TileHeight, angle: 180}
-      when :w then {x: TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 270}
-      when :e then {x: WindowWidth - TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 90}
+      when :north then {x: WindowWidth/2, y: TileHeight + MapYOffset, angle: 0}
+      when :south then {x: WindowWidth/2, y: WindowHeight - TileHeight, angle: 180}
+      when :west then {x: TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 270}
+      when :east then {x: WindowWidth - TileWidth, y: (WindowHeight + MapYOffset)/2, angle: 90}
       else; raise "That's not a direction! #{dir.inspect}"
       end
       options.merge!(dir: dir,switch_id: switch_id)
       door_klass.create(options)
     end
+    
+    def add_enemy
+      Enemy.create
+    end
+    
   end
 end

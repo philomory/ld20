@@ -1,12 +1,18 @@
 module LD20
+  ClosedDoors = []
   class ClosedDoor < Chingu::GameObject
     def initialize(*args)
       super
       self.zorder ||= 501
     end
     
-    def collided_with_player(player)
-      player.undo_move
+    def dir
+      @options[:dir]
+    end
+    
+    def player_collision(player)
+      puts self.parent == $window.current_game_state
+      return true
     end
     def collided_with_enemy(enemy)
       enemy.undo_move

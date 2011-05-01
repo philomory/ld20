@@ -1,6 +1,6 @@
 module LD20
   class RoomState < Chingu::GameState
-    attr_reader :terrain
+    attr_reader :terrain, :room_data, :doors
     include RoomData
     def initialize(options = {})
       @room_x, @room_y = options[:room_x], options[:room_y]
@@ -9,14 +9,10 @@ module LD20
       #on_input(:p,PauseState)
       
       super
-      #px, py = *options[:player_pos] || [PlayerStartX, PlayerStartY]
+      px, py = *options[:player_pos] || [PlayerStartX, PlayerStartY]
       
       load_room_data
-      #@terrain = load_terrain
-      #load_props
-      #load_enemies
-      #load_prize
-      #@player = PlayerSprite.create(:x => px, :y => py, :basic_player => $window.basic_player)      
+      @player = PlayerSprite.create(:x => px, :y => py, :basic_player => $window.basic_player)      
       #@HUD = HUD.create(:player => @player)
       @ready = true
     end
@@ -24,22 +20,22 @@ module LD20
     def update
       super
       
-      #@player.each_bounding_box_collision(Enemy) do |player, enemy|
-      #  player.hit_by(enemy)
-      #end
-      #
-      #@player.each_bounding_box_collision(Prop) do |player, prop|
-      #  prop.player_collision(player)
-      #end
-      #
+      @player.each_bounding_box_collision(Enemy) do |player, enemy|
+        player.hit_by(enemy)
+      end
+      
+      @player.each_bounding_box_collision(*Props) do |player, prop|
+        prop.player_collision(player)
+      end
+            
       #PlayerSword.each_bounding_box_collision(Enemy) do |sword, enemy|
       #  enemy.hit_by(sword)
       #end
-      #
+      
       #Prop.each_bounding_box_collision(Enemy) do |prop, enemy|
       #    prop.enemy_collision(enemy)
       #end
-      #
+      
       #Prop.each_bounding_box_collision(PlayerSword) do |prop, weapon|
       #    prop.weapon_collision(weapon)
       #end
@@ -59,7 +55,12 @@ module LD20
     end
     
     def unlock_door(dir)
-      @room[:connected_rooms][dir][:door_type] = :normal
+      @room_data[:connected_rooms][dir][:door_type] = :normal
+    end
+    
+    def remove_layout_entry(x,y)
+      index = x + y * (MapTilesWide + 1)
+      @room_data[:layout_data].chars
     end
     
     def terrain_at(x_pos,y_pos)
@@ -73,6 +74,20 @@ module LD20
         #Sound['award.ogg'].play
         Prop.place(@prize)
       end
+    end
+    
+    def transition(direction)
+      new_coords = @room_data[:connected_rooms][direction][:room]
+      room_x, room_y = *new_coords
+      p_coords = case direction
+      when :west then [PlayerXEntryEast, @player.y]
+      when :east then [PlayerXEntryWest, @player.y]
+      when :north then [@player.x, PlayerYEntrySouth]
+      when :south then [@player.x, PlayerYEntryNorth]
+      end
+      p_x, p_y = *p_coords
+
+      switch_game_state(RoomState.new(room_x: room_x, room_y: room_y, player_pos: [p_x,p_y], player: @player))
     end
     
   end

@@ -16,4 +16,6 @@ module LD20
     end
     
   end
+  ClosedDoors << ItemBlockedDoor
+  
 end

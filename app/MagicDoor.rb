@@ -5,13 +5,17 @@ module LD20
       @image = Image["magic_door.png"]
     end
     
-    def collided_with_player(player)
-      if player.has_magic_key?
+    def player_collision(player)
+      if player.has_item(:magic_key)
         @parent.unlock_door(@options[:dir])
         self.destroy
+        false
       else
         super
       end
     end
   end
+  
+  ClosedDoors << MagicDoor
+  
 end

@@ -5,14 +5,17 @@ module LD20
       @image = Image["key_locked_door.png"]
     end
     
-    def collided_with_player(player)
+    def player_collision(player)
       if player.has_key?
         player.consume_key
         @parent.unlock_door(@options[:dir])
         self.destroy
+        false
       else
         super
       end
     end
   end
+  ClosedDoors << KeyLockedDoor
+  
 end

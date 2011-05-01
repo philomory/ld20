@@ -7,4 +7,7 @@ module LD20
     end
     
   end
+  
+  ClosedDoors << SwitchLockedDoor
+  
 end
