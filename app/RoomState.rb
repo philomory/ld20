@@ -59,8 +59,11 @@ module LD20
     end
     
     def remove_layout_entry(x,y)
+      x -= 2
+      y -= 2
       index = x + y * (MapTilesWide + 1)
-      @room_data[:layout_data].chars
+      puts @room_data[:layout_data][index]
+      @room_data[:layout_data][index]='.'
     end
     
     def terrain_at(x_pos,y_pos)

@@ -10,7 +10,7 @@ module LD20
   MapYOffset = 1 * TileHeight
   
   MapTilesWide = FullMapTilesWide - 4
-  MapTilesHigh = FullMaptilesHigh - 4
+  MapTilesHigh = FullMapTilesHigh - 4
   
   WallColor = 0xFF283732
   

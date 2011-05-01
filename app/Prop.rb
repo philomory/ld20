@@ -36,8 +36,9 @@ module LD20
     end
     
     def destroy
-      if @placed
-        @room.remove_layout_entry(@options[:properties][:grid_x],options[:properties][:grid_y])
+      if @destroy_forever
+        puts "Gone forever!"
+        @parent.remove_layout_entry(@options[:properties][:grid_x],options[:properties][:grid_y])
       end
       super
     end
