@@ -8,6 +8,7 @@ module LD20
       self.class.available_layouts
     end
     
+    attr_reader :prize
     def initialize(room)
       @room = room
       @grid = room.terrain
@@ -15,6 +16,7 @@ module LD20
       @item_blocked = '.'
       setup
       gen_layout
+      populate
     end
     
     def setup
@@ -49,12 +51,20 @@ module LD20
         data.gsub!('?','W')
       end
       
-      num = data.count('i')
-      unless num.zero?
-        picked = rand(num)
+      inum = data.count('i')
+      unless inum.zero?
+        picked = rand(inum)
         data.gsub!('i').each_with_index {|c,i| i == picked ? @room_item : '_' }
       end
       
+      pnum = data.count('*')
+      unless pnum.zero?
+        marker = (@prize ? '!' : @room_item)
+        picked = rand(pnum)
+        data.gsub!('*').each_with_index {|c,i| i == picked ? marker : '_' }
+      end
+      
+      raise if (data =~ /\!/ && !@prize)
       data.gsub!('b',@item_blocked) 
       
       #puts data
@@ -84,6 +94,18 @@ module LD20
         Prop::Key.place(x: x, y: y)
       when 'S'
         Prop::Switch.place(x: x, y: y, switch_id: @room.room_data[:switch_id])
+      when '!'
+        @prize.update(x: x, y: y)
+        puts @prize
+      end
+    end
+    
+    def populate(num=[0,1,1,2])
+      num = num.is_a?(Array) ? num.sample : num
+      @room.room_data[:enemies] ||= {}
+      @room.room_data[:enemies][:knight] ||= num
+      @room.room_data[:enemies][:knight].times do
+        Enemy.create
       end
     end
     

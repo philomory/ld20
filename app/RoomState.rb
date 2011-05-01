@@ -1,6 +1,7 @@
 module LD20
   class RoomState < Chingu::GameState
     attr_reader :terrain, :room_data, :doors
+    attr_accessor :prize
     include RoomData
     def initialize(options = {})
       @room_x, @room_y = options[:room_x], options[:room_y]
@@ -28,17 +29,17 @@ module LD20
         prop.player_collision(player)
       end
             
-      #PlayerSword.each_bounding_box_collision(Enemy) do |sword, enemy|
-      #  enemy.hit_by(sword)
-      #end
+      PlayerSword.each_bounding_box_collision(Enemy) do |sword, enemy|
+        enemy.hit_by(sword)
+      end
       
       #Prop.each_bounding_box_collision(Enemy) do |prop, enemy|
       #    prop.enemy_collision(enemy)
       #end
       
-      #Prop.each_bounding_box_collision(PlayerSword) do |prop, weapon|
-      #    prop.weapon_collision(weapon)
-      #end
+      Prop.each_bounding_box_collision(PlayerSword) do |prop, weapon|
+          prop.weapon_collision(weapon)
+      end
       
     end
     
@@ -55,7 +56,7 @@ module LD20
     end
     
     def unlock_door(dir)
-      @room_data[:connected_rooms][dir][:door_type] = :normal
+      @room_data[:connected_rooms][dir][:type] = :normal
     end
     
     def remove_layout_entry(x,y)
@@ -73,9 +74,9 @@ module LD20
     end
     
     def check_for_prize
-      if @prize and Enemy.size.zero?
+      if @layout.prize and Enemy.size.zero?
         #Sound['award.ogg'].play
-        Prop.place(@prize)
+        Prop.place(@layout.prize)
       end
     end
     

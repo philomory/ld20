@@ -5,8 +5,8 @@ module LD20
     
     def self.place(options = {})
       @placed = true
-      if self.class == Prop
-        klass = self.const_get(options[:klass])
+      if self == Prop
+        klass = Prop.const_get(options[:klass])
       else
         klass = self
       end
@@ -21,6 +21,11 @@ module LD20
       instance = klass.create(options)
       instance.build(options[:properties])
       instance
+    end
+    
+    def initialize(*args)
+      raise "Prop is an abstract class!" if self.instance_of?(Prop)
+      super
     end
     
     def build(options = {})

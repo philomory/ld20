@@ -15,7 +15,7 @@ module LD20
       when :entry then EntryRoom.new(self)
       when :normal then NormalRoom.new(self)
       when :switch then SwitchRoom.new(self)
-      when :key then KeyRoom.new(self)
+      when :key then [KeyRoom,KeyPrizeRoom].sample.new(self)
       when :magic_key then MagicKeyRoom.new(self)
       when :item then TreasureRoom.new(self)
       when :goal then GoalRoom.new(self)

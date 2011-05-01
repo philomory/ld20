@@ -1,9 +1,14 @@
 module LD20
   class Prop::Switch < Prop
     def setup
-      @switch_id = @options[:properties][:switch_id]
+      trait_options[:bounding_box][:scale] = 0.25
+      @switch_id = @options[:switch_id]
       @animations = Chingu::Animation.new(file: 'switch_32x32.png')
-      @animations.frame_names = {inactive: 0..0, activating: 1..3, active: 3..7 }
+      @animations.frame_names = {inactive: 0..0, activating: 1..3, active: 3..6 }
+      @animations[:activating].delay = 500
+      @animations[:activating].loop = false
+      @animations[:active].delay = 250
+      @animations[:active].bounce = true
       @state = $window.dungeon.activated_switches.include?(@switch_id) ? :active : :inactive
       @image = @animations[@state].next
       x, y = @options[:properties][:grid_x], @options[:properties][:grid_y]
@@ -25,6 +30,7 @@ module LD20
     
     def activate
       @state = :activating
+      puts "Activating switch: #{@switch_id.inspect}"
       $window.dungeon.activated_switches << @switch_id
       SwitchLockedDoor.each {|d| d.open(@switch_id) }
     end

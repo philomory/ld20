@@ -23,9 +23,8 @@ module LD20
     end
     
     def choose_random_location
-      available = @parent.terrain.each_with_coords.select {|t,x,y| t.walkable}
-      picked = rand(available.size)
-      result = available[picked][1,2]
+      choice = @parent.terrain.each_with_coords.select {|t,x,y| t.walkable}.sample
+      result = choice[1,2]
       result
     end
     
@@ -87,8 +86,14 @@ module LD20
     def update
       @image = @animation.next
       if @moving and colliding_with_terrain?(@moving)
+        raise "Aha!" if [@previous_x, @previous_y].include?(nil)
         @x, @y = @previous_x, @previous_y
         @velocity_x = @velocity_y = 0
+      else
+        each_bounding_box_collision(ClosedDoor) do |enemy, door|
+          @x, @y = @previous_x, @previous_y
+          break
+        end
       end
     end
     

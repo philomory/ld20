@@ -19,4 +19,7 @@ module LD20
   Floor2Covered = Floor2.dup
   Floor2Covered.walkable = false
   
+  OutOfBounds = OpenStruct.new
+  OutOfBounds.walkable = false
+  
 end

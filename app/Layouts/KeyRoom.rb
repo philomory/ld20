@@ -4,5 +4,9 @@ module LD20
     def setup
       @room_item = 'K'
     end
+    
+    def populate
+      super([2,2,3])
+    end
   end
 end

@@ -4,6 +4,11 @@ module LD20
     def setup
       @image = Image["switch_locked_door.png"]
       @switch_id = @options[:switch_id]
+      puts "Switch-locked Door: #{@switch_id} #{$window.dungeon.activated_switches}"
+    end
+    
+    def update
+      destroy if $window.dungeon.activated_switches.include? @switch_id
     end
     
     def open(switch_id)

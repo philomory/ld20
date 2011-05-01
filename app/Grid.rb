@@ -12,7 +12,7 @@ module LD20
       if (0...@width).include?(x) and (0...@height).include?(y)
         return @spaces[x][y]
       else
-        return :out_of_bounds
+        return OutOfBounds
       end
     end
     
