@@ -11,7 +11,6 @@ module LD20
     end
     
     def layout
-      p @room_data[:type]
       @layout = case @room_data[:type]
       when :entry then EntryRoom.new(self)
       when :normal then NormalRoom.new(self)

@@ -2,7 +2,6 @@ module LD20
   class Prop::Pickup < Prop
     
     def player_collision(player)
-      puts "pickup!"
       self.picked_up_by(player)
       @sound.play if @sound
       destroy!

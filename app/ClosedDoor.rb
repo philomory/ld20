@@ -11,7 +11,6 @@ module LD20
     end
     
     def player_collision(player)
-      puts self.parent == $window.current_game_state
       return true
     end
     def collided_with_enemy(enemy)

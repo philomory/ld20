@@ -6,6 +6,10 @@ module LD20
       @switch_id = @options[:switch_id]
     end
     
+    def open(switch_id)
+      destroy if switch_id == @switch_id
+    end
+    
   end
   
   ClosedDoors << SwitchLockedDoor

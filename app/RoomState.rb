@@ -62,7 +62,7 @@ module LD20
       x -= 2
       y -= 2
       index = x + y * (MapTilesWide + 1)
-      puts @room_data[:layout_data][index]
+      #puts @room_data[:layout_data][index]
       @room_data[:layout_data][index]='.'
     end
     

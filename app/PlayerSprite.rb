@@ -122,7 +122,6 @@ module LD20
         if leaving_screen?
           @parent.transition(@moving)
         elsif @undo_move or colliding_with_terrain?(@moving)
-          puts "Collided!"
           @x, @y = @last_x, @last_y
         else
           stop = false
@@ -130,7 +129,6 @@ module LD20
             stop = ((door.parent == $window.current_game_state) && door.player_collision(player))
           end
           if stop
-            puts "Doorstop!"
             @x, @y = @last_x, @last_y
           end
         end

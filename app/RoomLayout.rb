@@ -52,14 +52,13 @@ module LD20
       num = data.count('i')
       unless num.zero?
         picked = rand(num)
-        puts "#{@room_item}: #{picked}" unless num.zero?
         data.gsub!('i').each_with_index {|c,i| i == picked ? @room_item : '_' }
       end
       
       data.gsub!('b',@item_blocked) 
       
-      puts data
-      puts
+      #puts data
+      #puts
     end
     
     def parse_layout_data(data)

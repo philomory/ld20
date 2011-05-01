@@ -13,4 +13,10 @@ module LD20
   Wall.image_file = "wall.png"
   Wall.walkable = false
   
+  Floor1Covered = Floor1.dup
+  Floor1Covered.walkable = false
+  
+  Floor2Covered = Floor2.dup
+  Floor2Covered.walkable = false
+  
 end

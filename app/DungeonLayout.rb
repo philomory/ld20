@@ -1,6 +1,6 @@
 module LD20
   class DungeonLayout
-    attr_reader :dungeon_map
+    attr_reader :dungeon_map, :activated_switches
     def initialize
       gen_layout
     end
@@ -28,6 +28,7 @@ module LD20
       @latest_room = nil
       @next_switch_id = 0
       @current_step = nil
+      @activated_switches = []
     end
 
     def entry
