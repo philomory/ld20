@@ -16,6 +16,13 @@ module LD20
       push_game_state RoomState.new(room_x:0, room_y:0)
     end
     
+    def restart
+      clear_game_states
+      @dungeon = DungeonLayout.new
+      @basic_player = BasicPlayer.new
+      push_game_state RoomState.new(room_x: 0, room_y:0)
+    end
+    
     def update
       super
       self.caption = "FPS:#{$window.fps}"

@@ -107,6 +107,7 @@ module LD20
     
     def win_boss_fight
       Enemy.destroy_all
+      push_game_state VictoryState
     end
     
   end

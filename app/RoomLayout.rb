@@ -95,7 +95,7 @@ module LD20
       when 'S'
         Prop::Switch.place(x: x, y: y, switch_id: @room.room_data[:switch_id])
       when '!'
-        @prize.update(x: x, y: y)
+        @prize.update(x: x, y: y) if @prize
         #puts @prize
       end
     end

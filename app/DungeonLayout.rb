@@ -19,7 +19,7 @@ module LD20
     def setup
       @stages_pre_item_range = [1,2,2,2,2,3,3]
       @stages_post_item_range = [1,1,2,2,2,3,3]
-      @rooms_per_normal_stage = [1,2,2,3,4]
+      @rooms_per_normal_stage = [1,2,2,3]
       @rooms_added_for_item_step = [1,1,2,3]
       @rooms_added_for_magic_key_step = [0,1,1,1,2]
 
@@ -101,7 +101,7 @@ module LD20
 
     def pre_item_stage
       type_of_obstacle = [:key_lock,:switch_lock].sample
-      number_of_rooms = @rooms_per_normal_stage.to_a.sample - 1
+      number_of_rooms = @rooms_per_normal_stage.to_a.sample
       number_of_rooms.times do
         room_to_branch = pick_a_room
         if room_to_branch
@@ -168,7 +168,7 @@ module LD20
 
     def post_item_stage
       type_of_obstacle = [:key_lock, :switch_lock, :item_key_lock, :item_switch_lock].sample
-      number_of_rooms = @rooms_per_normal_stage.to_a.sample - 1
+      number_of_rooms = @rooms_per_normal_stage.to_a.sample
       number_of_rooms.times do
         room_to_branch = pick_a_room
         if room_to_branch
