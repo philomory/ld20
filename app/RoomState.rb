@@ -16,9 +16,15 @@ module LD20
       @player = PlayerSprite.create(:x => px, :y => py, :basic_player => $window.basic_player)      
       @HUD = HUD.create(:player => @player)
       @ready = true
+      @first_run = true
     end
     
     def update
+      if @first_run
+        @first_run = false
+        @layout.start_by_doing
+        return
+      end
       super
       
       @player.each_bounding_box_collision(Enemy) do |player, enemy|

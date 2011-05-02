@@ -9,3 +9,11 @@ class Chingu::BasicGameObject
     $window.current_scope.game_objects.of_class(self).dup 
   end
 end
+
+class Chingu::GameStates::Popup
+  def button_up(id)
+    def button_up(id)
+      pop_game_state(:setup => false) if [Gosu::KbReturn, Gosu::KbEnter].include?(id)   # Return the previous game state, dont call setup()
+    end
+  end
+end

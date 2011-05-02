@@ -100,6 +100,9 @@ module LD20
       end
     end
     
+    def start_by_doing
+    end
+    
     def populate(num=[0,1,1,2])
       num = num.is_a?(Array) ? num.sample : num
       @room.room_data[:enemies] ||= {}

@@ -14,7 +14,6 @@ module LD20
       #@dungeon.show
       @basic_player = BasicPlayer.new
       push_game_state RoomState.new(room_x:0, room_y:0)
-      
     end
     
     def update

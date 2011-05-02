@@ -17,11 +17,11 @@ module LD20
     end
 
     def setup
-      @stages_pre_item_range = [1] #TODO: [2,2,2,2,3,3,4]
-      @stages_post_item_range = [1] #TODO: [1,1,2,2,2,3,3,4]
-      @rooms_per_normal_stage = [2] #TODO: [2,2,3,4]
-      @rooms_added_for_item_step = [1] #TODO: [1,1,2,3]
-      @rooms_added_for_magic_key_step = [1] #TODO: [0,1,1,1,2]
+      @stages_pre_item_range = [1,2,2,2,2,3,3]
+      @stages_post_item_range = [1,1,2,2,2,3,3]
+      @rooms_per_normal_stage = [1,2,2,3,4]
+      @rooms_added_for_item_step = [1,1,2,3]
+      @rooms_added_for_magic_key_step = [0,1,1,1,2]
 
       @dungeon_map = {}
       @stages = []
