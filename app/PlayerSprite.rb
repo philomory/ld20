@@ -47,8 +47,6 @@ module LD20
           
       @last_x, @last_y = @x, @y
       
-      get_item(:magic_key,{})
-      
       update
       cache_bounding_box
     end
