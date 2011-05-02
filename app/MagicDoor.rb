@@ -6,7 +6,7 @@ module LD20
     end
     
     def player_collision(player)
-      if player.has_item(:magic_key)
+      if player.has_item?(:magic_key)
         @parent.unlock_door(@options[:dir])
         self.destroy
         false

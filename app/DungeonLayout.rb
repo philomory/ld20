@@ -1,6 +1,6 @@
 module LD20
   class DungeonLayout
-    attr_reader :dungeon_map, :activated_switches
+    attr_reader :dungeon_map, :activated_switches, :boss_room
     def initialize
       gen_layout
     end
@@ -13,14 +13,15 @@ module LD20
       post_item
       magic_key
       goal
+      boss
     end
 
     def setup
-      @stages_pre_item_range = (2..4)
-      @stages_post_item_range = (2..4)
-      @rooms_per_normal_stage = (2..4)
-      @rooms_added_for_item_step = (1..3)
-      @rooms_added_for_magic_key_step = (0..2)
+      @stages_pre_item_range = [1] #TODO: [2,2,2,2,3,3,4]
+      @stages_post_item_range = [1] #TODO: [1,1,2,2,2,3,3,4]
+      @rooms_per_normal_stage = [2] #TODO: [2,2,3,4]
+      @rooms_added_for_item_step = [1] #TODO: [1,1,2,3]
+      @rooms_added_for_magic_key_step = [1] #TODO: [0,1,1,1,2]
 
       @dungeon_map = {}
       @stages = []
@@ -211,11 +212,30 @@ module LD20
         x: x,
         y: y,
         step: :goal,
+        type: :goal,
         available_edges: [],
         connected_rooms: {}
       }
       add_room(room)
       connect_rooms(room_to_branch,room,direction,:magic_door)
+    end
+    
+    def boss
+      @current_step = :goal
+      start_new_stage
+      room_to_branch = pick_a_room(this_stage: false)
+      direction = room_to_branch[:available_edges].sample
+      x,y = coords_in_direction(room_to_branch,direction)
+      room = {
+        x: x,
+        y: y,
+        step: :boss,
+        type: :boss,
+        available_edges: [],
+        connected_rooms: {}
+      }
+      add_room(room)
+      @boss_room = [x,y]
     end
 
     def branch_obstacle(type)
@@ -311,27 +331,27 @@ module LD20
       end
     end
 
+    def show
+      min_x = @dungeon_map.keys.map {|k| k[0]}.min
+      min_y = @dungeon_map.keys.map {|k| k[1]}.min
+
+      max_x = @dungeon_map.keys.map {|k| k[0]}.max # unlimited!
+      max_y = @dungeon_map.keys.map {|k| k[1]}.max
+
+      (min_y..max_y).each do |y|
+        (min_x..max_x).each do |x|
+          room = @dungeon_map[[x,y]]
+          char = room ? room[:stage].to_s(36) : '.'
+          print char
+        end
+        puts
+      end
+      puts
+    end
+
   end
 end
 
 if $0 == __FILE__
-  map = LD20::DungeonLayout.new
-  map.gen_layout
-  map.instance_eval do
-    min_x = @dungeon_map.keys.map {|k| k[0]}.min
-    min_y = @dungeon_map.keys.map {|k| k[1]}.min
-
-    max_x = @dungeon_map.keys.map {|k| k[0]}.max # unlimited!
-    max_y = @dungeon_map.keys.map {|k| k[1]}.max
-
-    (min_y..max_y).each do |y|
-      (min_x..max_x).each do |x|
-        room = @dungeon_map[[x,y]]
-        char = room ? room[:stage].to_s(36) : '.'
-        print char
-      end
-      puts
-    end
-    puts
-  end
+  LD20::DungeonLayout.new.show
 end

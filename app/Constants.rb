@@ -22,4 +22,8 @@ module LD20
   
   PlayerYEntrySouth = WindowHeight - TileWidth
   PlayerYEntryNorth = MapYOffset + TileHeight
+  
+  PlayerPosForBoss = [PlayerStartX, FullMapTilesHigh * 3 / 4 * TileHeight + MapYOffset]
+  BossX = PlayerStartX
+  BossY = TileHeight * 4 + MapYOffset - TileHeight/2
 end

@@ -105,7 +105,7 @@ module LD20
       @room.room_data[:enemies] ||= {}
       @room.room_data[:enemies][:knight] ||= num
       @room.room_data[:enemies][:knight].times do
-        Enemy.create
+        Knight.create
       end
     end
     

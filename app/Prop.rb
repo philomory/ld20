@@ -37,12 +37,16 @@ module LD20
     def enemy_collision(enemy)
     end
     
-    def weapon_collision(weapon)  
+    def weapon_collision(weapon)
+      weapon.impacted  
     end
     
     def destroy
       if @destroy_forever
         @parent.remove_layout_entry(@options[:properties][:grid_x],options[:properties][:grid_y])
+        if @options[:prize]
+          @parent.room_data[:prize_collected] = true
+        end
       end
       super
     end

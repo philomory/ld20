@@ -16,8 +16,8 @@ module LD20
     include TerrainCollision
     
     def initialize(options = {})
-      super
       @basic_player = options[:basic_player]
+      super
     end
     
     def setup
@@ -26,37 +26,51 @@ module LD20
         :holding_right => :move_east, 
         :holding_up    => :move_north, 
         :holding_down  => :move_south,
-        :z             => :sword
+        :z             => :sword,
+        :x             => :activate_item
       }
         
       
-      @animation = Chingu::Animation.new(:file => "player_32x32.png")
-      @animation.frame_names = {:facing_north => 0, :facing_south => 1, :facing_west => 2, :facing_east => 3 }
+      @animations = Chingu::Animation.new(file: "player_32x32.png", delay: 250)
+      @animations.frame_names = {
+        facing_south: 0..0,
+        moving_south: 0..3, 
+        facing_north: 4..4,
+        moving_north: 4..7,
+        facing_west:  8..8,
+        moving_west:  8..11,
+        facing_east: 12..12,
+        moving_east: 12..15
+      }
       @frame_name = :facing_south
       @facing = :south
           
       @last_x, @last_y = @x, @y
+      
+      get_item(:magic_key,{})
+      
       update
+      cache_bounding_box
     end
     
     def move_west
       @moving = @facing = :west
-      @frame_name = :facing_west
+      @frame_name = :moving_west
     end
     
     def move_east
       @moving = @facing = :east
-      @frame_name = :facing_east
+      @frame_name = :moving_east
     end
     
     def move_north
       @moving = @facing = :north
-      @frame_name = :facing_north
+      @frame_name = :moving_north
     end
     
     def move_south
       @moving = @facing = :south
-      @frame_name = :facing_south
+      @frame_name = :moving_south
     end
     
     def sword
@@ -65,7 +79,12 @@ module LD20
       end
     end
     
-
+    def activate_item
+      if has_item?(:lipstick) && KissHeart.size.zero?
+        KissHeart.create(x: @x, y: @y, direction: @facing)
+      end
+    end
+    
     
     def hit_by(enemy)
       return if @invincible
@@ -103,7 +122,8 @@ module LD20
     end
     
     def update
-      @image = @animation[@frame_name]
+      @frame_name = :"facing_#{@facing}" unless @moving
+      @image = @animations[@frame_name].next
       return unless PlayerSword.size.zero?
       
       move = case @moving

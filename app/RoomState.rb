@@ -14,7 +14,7 @@ module LD20
       
       load_room_data
       @player = PlayerSprite.create(:x => px, :y => py, :basic_player => $window.basic_player)      
-      #@HUD = HUD.create(:player => @player)
+      @HUD = HUD.create(:player => @player)
       @ready = true
     end
     
@@ -25,20 +25,20 @@ module LD20
         player.hit_by(enemy)
       end
       
-      @player.each_bounding_box_collision(*Props) do |player, prop|
+      @player.each_bounding_box_collision(Prop) do |player, prop|
         prop.player_collision(player)
       end
             
-      PlayerSword.each_bounding_box_collision(Enemy) do |sword, enemy|
-        enemy.hit_by(sword)
+      Enemy.each_bounding_box_collision(Weapon) do |enemy, weapon|
+        enemy.hit_by(weapon)
       end
       
-      #Prop.each_bounding_box_collision(Enemy) do |prop, enemy|
-      #    prop.enemy_collision(enemy)
-      #end
+      Prop.each_bounding_box_collision(Weapon) do |prop, weapon|
+        prop.weapon_collision(weapon)
+      end
       
-      Prop.each_bounding_box_collision(PlayerSword) do |prop, weapon|
-          prop.weapon_collision(weapon)
+      ClosedDoor.each_bounding_box_collision(Weapon) do |door, weapon|
+        door.collided_with_weapon(weapon)
       end
       
     end
@@ -74,9 +74,9 @@ module LD20
     end
     
     def check_for_prize
-      if @layout.prize and Enemy.size.zero?
+      if @layout.prize and !@room_data[:prize_collected] and Enemy.size.zero?
         #Sound['award.ogg'].play
-        Prop.place(@layout.prize)
+        Prop.place(@layout.prize.update(prize: true))
       end
     end
     
@@ -92,6 +92,15 @@ module LD20
       p_x, p_y = *p_coords
 
       switch_game_state(RoomState.new(room_x: room_x, room_y: room_y, player_pos: [p_x,p_y], player: @player))
+    end
+    
+    def boss_warp
+      room_x, room_y = *$window.dungeon.boss_room
+      switch_game_state(RoomState.new(room_x: room_x, room_y: room_y, player_pos: PlayerPosForBoss, player: @player))
+    end
+    
+    def win_boss_fight
+      Enemy.destroy_all
     end
     
   end

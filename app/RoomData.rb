@@ -13,12 +13,15 @@ module LD20
     def layout
       @layout = case @room_data[:type]
       when :entry then EntryRoom.new(self)
-      when :normal then NormalRoom.new(self)
+      when :normal, nil then NormalRoom.new(self)
       when :switch then SwitchRoom.new(self)
-      when :key then [KeyRoom,KeyPrizeRoom].sample.new(self)
+      when :key then [KeyRoom,KeyPrizeRoom,KeyPrizeRoom].sample.new(self)
+      when :item_blocked_switch then ItemBlockedSwitchRoom.new(self)
+      when :item_blocked_key then ItemBlockedKeyRoom.new(self)
       when :magic_key then MagicKeyRoom.new(self)
       when :item then TreasureRoom.new(self)
       when :goal then GoalRoom.new(self)
+      when :boss then BossRoom.new(self)
       else
         warn "unrecognized room type: #{@room_data[:type]}"
         NormalRoom.new(self)
@@ -97,7 +100,7 @@ module LD20
     end
     
     def add_enemy
-      Enemy.create
+      Knight.create
     end
     
   end

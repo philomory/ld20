@@ -6,13 +6,12 @@ module LD20
       @switch_id = @options[:switch_id]
     end
     
-    def collided_with_other(object)
-      if object.unblocks_doors?
+    def collided_with_weapon(weapon)
+      if weapon.breaks_blocks?
         @parent.unlock_door(@options[:dir])
         self.destroy
-      else
-        super
       end
+      super
     end
     
   end

@@ -1,16 +1,11 @@
 module LD20
-  class PlayerSword < Chingu::GameObject
+  class PlayerSword < Weapon
     traits :timer, :bounding_box, :collision_detection
-    
-    def size
-      result = super
-      raise if result.include?(nil)
-      result
-    end
     
     def initialize(options = {})
       super
       @direction = options[:direction]
+      @damage = 2
       
       @animation = Chingu::Animation.new(:file => "sword_32x32.png")
       @animation.frame_names = {:north => 0, :south => 1, :west => 2, :east => 3 }
@@ -30,6 +25,8 @@ module LD20
       between(  0, 100) { @x += move[0]; @y += move[1] }
       between(150, 250) { @x -= move[0]; @y -= move[1] }
       .then { destroy! }
+      
+      cache_bounding_box
     end
     
   end

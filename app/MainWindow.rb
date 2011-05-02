@@ -11,9 +11,17 @@ module LD20
       super(WindowWidth,WindowHeight)
       self.input = {escape: :exit}
       @dungeon = DungeonLayout.new
+      @dungeon.show
       @basic_player = BasicPlayer.new
       push_game_state RoomState.new(room_x:0, room_y:0)
+      current_game_state.boss_warp
       
     end
+    
+    def update
+      super
+      self.caption = "FPS:#{$window.fps}"
+    end
+    
   end
 end
