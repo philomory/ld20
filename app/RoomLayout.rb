@@ -96,7 +96,7 @@ module LD20
         Prop::Switch.place(x: x, y: y, switch_id: @room.room_data[:switch_id])
       when '!'
         @prize.update(x: x, y: y)
-        puts @prize
+        #puts @prize
       end
     end
     

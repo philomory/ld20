@@ -39,12 +39,12 @@ module LD20
       x = 640 - (18 * 10)
       y = 8
       @player.health.times do
-        Image["kiss_heart.png"].draw(x,y,0)
+        Image["health_heart.png"].draw(x,y,0)
         x += 18
       end
       
       @player.damage_taken.times do
-        Image["kiss_heart.png"].draw(x,y,0,1,1,0xFF888888)
+        Image["health_heart.png"].draw(x,y,0,1,1,0xFF888888)
         x += 18
       end
     end

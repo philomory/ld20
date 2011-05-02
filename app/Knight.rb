@@ -73,7 +73,7 @@ module LD20
     def die
       @dead = true
       #Sound["enemy_dies.ogg"].play
-      #Prop::Pickup.create_small_pickup(x,y) if rand(2).zero?
+      Prop::Pickup.create_small_pickup(x,y) if rand(2).zero?
       destroy!
       @parent.check_for_prize
     end

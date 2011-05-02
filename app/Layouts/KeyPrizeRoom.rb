@@ -3,7 +3,7 @@ module LD20
     @available_layouts = %w{blocks_a blocks_b center_block empty_room four_blocks horizontal_cover vertical_cover}
     def setup
       @prize = {klass: "Key"}
-      puts "There's a prize here!"
+      #puts "There's a prize here!"
     end
     
     def populate

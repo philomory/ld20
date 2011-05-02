@@ -30,7 +30,7 @@ module LD20
     
     def activate
       @state = :activating
-      puts "Activating switch: #{@switch_id.inspect}"
+      #puts "Activating switch: #{@switch_id.inspect}"
       $window.dungeon.activated_switches << @switch_id
       SwitchLockedDoor.each {|d| d.open(@switch_id) }
     end

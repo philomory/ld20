@@ -8,7 +8,7 @@ module LD20
     end
     
     def self.create_small_pickup(x,y)
-      klass = [Heart,Coin][rand(2)]
+      klass = [HealthHeart].sample
       klass.create(:x => x, :y => y)
     end
     
