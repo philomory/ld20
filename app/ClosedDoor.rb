@@ -1,6 +1,6 @@
 module LD20
-  ClosedDoors = []
-  class ClosedDoor < Chingu::GameObject
+  ClosedDoors ||= []
+  class ClosedDoor < Prop
     traits :bounding_box, :collision_detection
     
     def initialize(*args)

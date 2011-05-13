@@ -10,7 +10,7 @@ module LD20
         :get_item, :has_item?, :each_item
         )
     
-    attr_reader :last_x, :last_y
+    attr_reader :last_x, :last_y, :moving
     trait :bounding_box, :scale => 0.6
     traits :collision_detection, :timer
     include TerrainCollision
@@ -116,7 +116,7 @@ module LD20
     end
     
     def undo_move
-      @undo_move = true
+      @x, @y = @last_x, @last_y
     end
     
     def update
@@ -136,11 +136,13 @@ module LD20
       
       @x += move[0]; @y += move[1]
       
+      
+      #TODO: Do collision checks for player during this movement phase, rather than room.update.
       if @moving
         if leaving_screen?
           @parent.transition(@moving)
-        elsif @undo_move or colliding_with_terrain?(@moving)
-          @x, @y = @last_x, @last_y
+        elsif colliding_with_terrain?(@moving)
+          undo_move
         else
           stop = false
           each_bounding_box_collision(ClosedDoor) do |player, door|
@@ -151,7 +153,9 @@ module LD20
           end
         end
       end
-      
+    end
+    
+    def end_of_tick
       @moving = nil
       @undo_move = false
       @last_x, @last_y = @x, @y

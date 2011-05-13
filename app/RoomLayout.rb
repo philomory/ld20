@@ -43,10 +43,10 @@ module LD20
     end
     
     def munge_layout_data!(data)
-      if @puzzle
+      if true #@puzzle
         num = data.count('?')
         picked = rand(num)
-        data.gsub!('?').each_with_index {|c,i| i == picked ? 'P' : 'W' }
+        data.gsub!('?').each_with_index {|c,i| i == picked ? 'P' : 'P' } #TODO: change second P back to W
       else
         data.gsub!('?','W')
       end
@@ -87,7 +87,7 @@ module LD20
       when 'W'
         @grid[x,y] = Wall
       when 'P'
-        @grid[x,y] = Pushable
+        Prop::Pushable.place(x: x, y: y)
       when 'B'
         Prop::Breakable.place(x: x, y: y)
       when 'K'

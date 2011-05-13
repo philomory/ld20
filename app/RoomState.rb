@@ -47,6 +47,8 @@ module LD20
         door.collided_with_weapon(weapon)
       end
       
+      @player.end_of_tick
+      
     end
     
     def draw
@@ -83,6 +85,16 @@ module LD20
       if @layout.prize and !@room_data[:prize_collected] and Enemy.size.zero?
         #Sound['award.ogg'].play
         Prop.place(@layout.prize.update(prize: true))
+      end
+    end
+    
+    def check_puzzle_prize
+      current_state = Set.new(Prop::Pushable.all.map {|block| block.puzzle_pos})
+      p current_state
+      p @layout.solution
+      puts
+      if current_state == @layout.solution
+        puts "Win!"
       end
     end
     

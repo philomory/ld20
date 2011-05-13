@@ -12,7 +12,7 @@ module LD20
     
     def layout
       @layout = case @room_data[:type]
-      when :entry then EntryRoom.new(self)
+      when :entry then BlockPuzzleRoom.new(self)
       when :normal, nil then NormalRoom.new(self)
       when :switch then SwitchRoom.new(self)
       when :key then [KeyRoom,KeyPrizeRoom,KeyPrizeRoom].sample.new(self)
