@@ -11,8 +11,7 @@ module LD20
         )
     
     attr_reader :last_x, :last_y, :moving
-    trait :bounding_box, :scale => 0.6
-    traits :collision_detection, :timer
+    traits :bounding_box, :collision_detection, :timer
     include TerrainCollision
     
     def initialize(options = {})
@@ -27,9 +26,12 @@ module LD20
         :holding_up    => :move_north, 
         :holding_down  => :move_south,
         :z             => :sword,
-        :x             => :activate_item
+        :x             => :activate_item,
+        :p             => :pry
       }
         
+      
+      
       
       @animations = Chingu::Animation.new(file: "player_32x32.png", delay: 250)
       @animations.frame_names = {
@@ -119,6 +121,7 @@ module LD20
       @x, @y = @last_x, @last_y
     end
     
+
     def update
       @frame_name = :"facing_#{@facing}" unless @moving
       @image = @animations[@frame_name].next
@@ -129,6 +132,106 @@ module LD20
       when :east  then [ 2, 0]
       when :north then [ 0,-2]
       when :south then [ 0, 2]
+      else [0,0]
+      end
+      
+      move.map! {|m| m * 4} if @flinching
+      @x += move[0]; @y += move[1]
+      
+      travel(@moving) if @moving
+      
+      
+    end
+    
+    def travel(direction)
+      if leaving_screen?
+        @parent.transition(direction)
+      else
+        check_movement(direction)
+      end
+    end
+    
+    def check_movement(dir)
+      bb = self.bounding_box
+      case dir
+      when :north
+        b = bias(@x)
+        corners = [bb.topleft, bb.topright]
+      when :south
+        b = bias(@x)
+        corners = [bb.bottomleft, bb.bottomright]
+      when :east
+        b = bias(@y)
+        corners = [bb.topright, bb.bottomright]
+      when :west
+        b = bias(@y)
+        corners = [bb.topleft, bb.bottomleft]
+      end
+
+      corners.reverse! if b > 0
+
+      if blocked_at?(*corners[0])
+        puts "primary blocked"
+        undo_move
+      elsif b.nonzero? and secondary_blocked_at?(*corners[1])
+        puts "secondary blocked"
+        undo_move
+        adjust(b,dir)
+      else
+        #continue
+      end
+
+    end
+    
+    def blocked_at?(x,y)
+      return true if @parent.terrain_at(x,y).impassible_for_player?
+      ImpassibleProp.each_at(x,y) do |_|
+        return true
+      end
+      ClosedDoor.each_at(x,y) do |_|
+        return true
+      end
+      false
+    end
+    
+    # Pushable blocks cannot be pushed if you are too terribly off-center.
+    def secondary_blocked_at?(x,y)
+      return true if blocked_at?(x,y)
+      PushableProp.each_at(x,y) do |_|
+        return true
+      end
+      false
+    end
+
+    def adjust(b,dir)
+      if b.abs <= 8
+        case dir
+        when :north, :south
+          @x += (b <=> 0) * 2
+        else
+          @y += (b <=> 0) * 2
+        end
+      end
+    end
+
+    # We want a bias that points back towards the center of the tile. So, if smaller than 16, positive bias.
+    # If larger than 16, negative bias.
+    def bias(offset)
+      16 - (offset % 32)
+    end
+    
+    #leaving in, but trying something else.
+    def old_update
+      @frame_name = :"facing_#{@facing}" unless @moving
+      @image = @animations[@frame_name].next
+      return unless PlayerSword.size.zero?
+      
+      #TODO: Make it so that grid correction still applies as you walk into a wall.
+      move = case @moving
+      when :west  then [-2, correction_y]
+      when :east  then [ 2, correction_y]
+      when :north then [ correction_x,-2]
+      when :south then [ correction_x, 2]
       else [0,0]
       end
       
@@ -154,6 +257,17 @@ module LD20
         end
       end
     end
+    
+    # These are applied to correct movement along a half-tile grid
+    # see http://troygilbert.com/2006/10/the-movement-and-attack-mechanics-of-the-legend-of-zelda/
+    def correction_x
+      -(((@x + 8) % 16) <=> 8)
+    end
+    
+    def correction_y
+      -(((@y + 8) % 16) <=> 8)
+    end
+    
     
     def end_of_tick
       @moving = nil

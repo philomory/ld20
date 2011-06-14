@@ -87,7 +87,7 @@ module LD20
       when 'W'
         @grid[x,y] = Wall
       when 'P'
-        Prop::Pushable.place(x: x, y: y)
+        Prop::PushableBlock.place(x: x, y: y)
       when 'B'
         Prop::Breakable.place(x: x, y: y)
       when 'K'

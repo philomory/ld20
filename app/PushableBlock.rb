@@ -1,8 +1,7 @@
 module LD20
-  class Prop::Pushable < Prop
-    trait :bounding_box, :scale => 1.0
-    
+  class Prop::PushableBlock < PushableProp    
     def build(properties = {})
+      trait_options[:bounding_box][:scale] = 1.0
       @properties = properties
       if puzzle_pos = @options[:puzzle_pos]
         @puzzle = true
@@ -41,6 +40,9 @@ module LD20
       sy = @y + TileWidth * delta[1]
       return true unless @parent.terrain_at(sx,sy).walkable
       Prop.each_at(sx,sy) do |prop|
+        return true
+      end
+      ClosedDoor.each_at(sx,sy) do |door|
         return true
       end
       return false

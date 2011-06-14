@@ -1,5 +1,5 @@
 module LD20
-  class Prop::Switch < Prop
+  class Prop::Switch < ImpassibleProp
     def setup
       trait_options[:bounding_box][:scale] = 0.25
       @switch_id = @options[:switch_id]

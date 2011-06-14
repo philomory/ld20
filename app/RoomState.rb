@@ -75,6 +75,7 @@ module LD20
       @room_data[:layout_data][index]='.'
     end
     
+    # TODO: remove this once TerrainCollision makes it obsolete
     def terrain_at(x_pos,y_pos)
       grid_x = x_pos / TileWidth
       grid_y = (y_pos - MapYOffset) / TileHeight
@@ -89,7 +90,7 @@ module LD20
     end
     
     def check_puzzle_prize
-      current_state = Set.new(Prop::Pushable.all.map {|block| block.puzzle_pos})
+      current_state = Set.new(Prop::PushableBlock.all.map {|block| block.puzzle_pos})
       p current_state
       p @layout.solution
       puts

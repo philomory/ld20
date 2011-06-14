@@ -17,3 +17,13 @@ class Chingu::GameStates::Popup
     end
   end
 end
+
+# Fix chingu's rect off-by-one thing. A rect with height 32 should not cover 33 pixels!
+class Chingu::Rect
+  def right; return self.at(0)+self.at(2)-1; end
+  alias r right
+	
+	def bottom; return self.at(1)+self.at(3)-1; end
+  alias b bottom
+	
+end

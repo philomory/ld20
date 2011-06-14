@@ -1,5 +1,5 @@
 module LD20
-  class Prop::Breakable < Prop
+  class Prop::Breakable < ImpassibleProp
     def build(properties = {})
       @properties = properties
       @image = Image['breakable.png']
